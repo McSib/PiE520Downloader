@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace PiE520Downloader.E621Api
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class CreatedTime
     {
         public string json_class { get; set; }
@@ -11,7 +9,6 @@ namespace PiE520Downloader.E621Api
         public ulong n { get; set; }
     }
     
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class Post
     {
         public ulong id { get; set; }

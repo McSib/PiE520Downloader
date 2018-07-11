@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NDesk.Options;
 using Newtonsoft.Json;
 using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace PiE520Downloader
 {
@@ -59,7 +62,46 @@ namespace PiE520Downloader
             
             logger.Info("Validation complete.");
         }
+        
+        public static void CreateLogger(IEnumerable<string> args)
+        {
+            int verbosity = DetermineLogLevel(args);
+            var logConfig = GetLoggingConfig(verbosity);
+            LogManager.Configuration = logConfig;
+        }
+        
+        public static int DetermineLogLevel(IEnumerable<string> args)
+        {
+            int verbosity = 0;
+            var p = new OptionSet()
+            {
+                {"v", "Prints debug statements.", v => verbosity++}
+            };
 
+            try
+            {
+                p.Parse(args);
+            }
+            catch (OptionException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return verbosity;
+        }
+
+        public static LoggingConfiguration GetLoggingConfig(int verbosity)
+        {
+            var config = new LoggingConfiguration();
+            var logfile = new FileTarget("PiE520dl LogFile") {FileName = "log.txt"};
+            var logconsole = new ConsoleTarget("PiE520dl Console");
+            
+            config.AddRule(verbosity == 1 ? LogLevel.Debug : LogLevel.Info, verbosity == 1 ? LogLevel.Error : LogLevel.Fatal, logconsole);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+            return config;
+        }
+        
         public static Config GetConfigFile(string path)
         {
             if (File.Exists(path)) return JsonConvert.DeserializeObject<Config>(File.ReadAllText(Config));
