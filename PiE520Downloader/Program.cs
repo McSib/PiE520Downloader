@@ -12,6 +12,7 @@ namespace PiE520Downloader
     {
         public static void Main(string[] args)
         {
+            Util.CreateLogger(args);
             var logger = LogManager.GetCurrentClassLogger();
             logger.Debug("Logger intialized.");
             logger.Info($"Running PiE520Downloader version {ProgramVersion.Version}");
@@ -26,7 +27,7 @@ namespace PiE520Downloader
             {
                 var newPosts = E621PostManager.GetPosts(tag).ToList();
 
-                var cachedPosts = (from post in newPosts from md5Checks in cache where post.md5 == md5Checks select post).ToList();
+                var cachedPosts = (from post in newPosts from md5Checks in cache where post.Md5 == md5Checks select post).ToList();
                 foreach (var cachedPost in cachedPosts)
                 {
                     newPosts.Remove(cachedPost);
@@ -36,9 +37,12 @@ namespace PiE520Downloader
                 logger.Info($"{tag} Posts: {posts.Count} Total ({newPosts.Count} New, {cachedPosts.Count} Exists, {cachedPosts.Count} Cached)");
             }
 
-            Downloader.MultiDownload(posts, logger);
+            if (posts.Count > 0)
+            {
+                Downloader.MultiDownload(posts, logger);
+            }
             
-            cache.AddRange(posts.Select(i => i.md5));
+            cache.AddRange(posts.Select(i => i.Md5));
             string jsonCache = JsonConvert.SerializeObject(cache);
             File.WriteAllText(".cache", jsonCache);
         }

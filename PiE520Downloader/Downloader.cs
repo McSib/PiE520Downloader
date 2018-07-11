@@ -17,11 +17,11 @@ namespace PiE520Downloader
             using (var webClient = new WebClient())
             {
                 webClient.Headers.Add("User-Agent", "PiE520Downloader");
-                await webClient.DownloadFileTaskAsync(new Uri(post.file_url), $"downloads/{post.md5}.{post.file_ext}");
+                await webClient.DownloadFileTaskAsync(new Uri(post.FileUrl), $"downloads/{post.Md5}.{post.FileExt}");
                 progressBar.AddProgress();
             }
             
-            logger.Debug($"Downloaded {post.file_url}");
+            logger.Debug($"Downloaded {post.FileUrl}");
         }
 
         public static void MultiDownload(List<Post> posts, ILogger logger)

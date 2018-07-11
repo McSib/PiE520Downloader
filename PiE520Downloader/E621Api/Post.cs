@@ -1,47 +1,48 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace PiE520Downloader.E621Api
 {
     public class CreatedTime
     {
-        public string json_class { get; set; }
-        public ulong s { get; set; }
-        public ulong n { get; set; }
+        [JsonProperty("json_class")] public string JsonClass { get; set; }
+        [JsonProperty("s")] public ulong Seconds { get; set; }
+        [JsonProperty("n")] public ulong Nanos { get; set; }
     }
-    
+
     public class Post
     {
-        public ulong id { get; set; }
-        public string tags { get; set; }
-        public string locked_tags { get; set; }
-        public string description { get; set; }
-        public CreatedTime created_at { get; set; }
-        public ulong? creator_id { get; set; }
-        public string author { get; set; }
-        public ulong change { get; set; }
-        public string source { get; set; }
-        public int score { get; set; }
-        public ulong fav_count { get; set; }
-        public string md5 { get; set; }
-        public ulong file_size { get; set; }
-        public string file_url { get; set; }
-        public string file_ext { get; set; }
-        public ulong preview_size { get; set; }
-        public string preview_url { get; set; }
-        public string preview_ext { get; set; }
-        public ulong sample_size { get; set; }
-        public string sample_url { get; set; }
-        public string sample_ext { get; set; }
-        public string rating { get; set; }
-        public string status { get; set; }
-        public uint width { get; set; }
-        public uint height { get; set; }
-        public bool has_comments { get; set; }
-        public bool has_notes { get; set; }
-        public bool has_children { get; set; }
-        public string children { get; set; }
-        public ulong? parent_id { get; set; }
-        public IList<string> artist { get; set; }
-        public IList<string> sources { get; set; }
+        [JsonProperty("id")] public ulong Id { get; set; }
+        [JsonProperty("tags")] public string Tags { get; set; }
+        [JsonProperty("locked_tags")] public string LockedTags { get; set; }
+        [JsonProperty("descrition")] public string Description { get; set; }
+        [JsonProperty("created_at")] public CreatedTime CreatedAt { get; set; }
+        [JsonProperty("creator_id")] public ulong? CreatorId { get; set; }
+        [JsonProperty("author")] public string Author { get; set; }
+        [JsonProperty("change")] public ulong Change { get; set; }
+        [JsonProperty("source")] public string Source { get; set; }
+        [JsonProperty("score")] public int Score { get; set; }
+        [JsonProperty("fav_count")] public ulong FavCount { get; set; }
+        [JsonProperty("md5")] public string Md5 { get; set; }
+        [JsonProperty("file_size")] public ulong FileSize { get; set; }
+        [JsonProperty("file_url")] public string FileUrl { get; set; }
+        [JsonProperty("file_ext")] public string FileExt { get; set; }
+        [JsonProperty("preview_size")] public ulong PreviewSize { get; set; }
+        [JsonProperty("preview_url")] public string PreviewUrl { get; set; }
+        [JsonProperty("preview_ext")] public string PreviewExt { get; set; }
+        [JsonProperty("sample_size")] public ulong SampleSize { get; set; }
+        [JsonProperty("sample_url")] public string SampleUrl { get; set; }
+        [JsonProperty("sample_ext")] public string SampleExt { get; set; }
+        [JsonProperty("rating")] public string Rating { get; set; }
+        [JsonProperty("status")] public string Status { get; set; }
+        [JsonProperty("width")] public uint Width { get; set; }
+        [JsonProperty("height")] public uint Height { get; set; }
+        [JsonProperty("has_comments")] public bool HasComments { get; set; }
+        [JsonProperty("has_notes")] public bool HasNotes { get; set; }
+        [JsonProperty("has_children")] public bool HasChildren { get; set; }
+        [JsonProperty("children")] public string Children { get; set; }
+        [JsonProperty("parent_id")] public ulong? ParentId { get; set; }
+        [JsonProperty("artist")] public IList<string> Artist { get; set; }
+        [JsonProperty("sources")] public IList<string> Sources { get; set; }
     }
 }
