@@ -13,14 +13,14 @@ namespace PiE520Downloader
         {
             var logger = LogManager.GetCurrentClassLogger();
             var post = posts[i];
-            
+
             using (var webClient = new WebClient())
             {
                 webClient.Headers.Add("User-Agent", "PiE520Downloader");
                 await webClient.DownloadFileTaskAsync(new Uri(post.FileUrl), $"downloads/{post.Md5}.{post.FileExt}");
                 progressBar.AddProgress();
             }
-            
+
             logger.Debug($"Downloaded {post.FileUrl}");
         }
 
@@ -31,15 +31,12 @@ namespace PiE520Downloader
             var config = Util.GetConfigFile(Util.Config);
             var progressBar = new ProgressBar();
             progressBar.SetLength(posts.Count);
-            
+
             Parallel.For(0,
                 posts.Count,
                 new ParallelOptions() {MaxDegreeOfParallelism = 8},
-                i =>
-                {
-                    SingleDownload(i, posts, progressBar).Wait();
-                });
-            
+                i => { SingleDownload(i, posts, progressBar).Wait(); });
+
             logger.Debug("Successfully downloaded images.");
         }
     }

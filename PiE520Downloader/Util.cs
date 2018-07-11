@@ -14,63 +14,33 @@ namespace PiE520Downloader
     {
         public const string Config = "config.txt";
 
-        public static void ValidateFiles()
+        public static IEnumerable<string> GetTags()
         {
-            var logger = LogManager.GetCurrentClassLogger();
-            logger.Info("Checking cache file...");
-
             var config = GetConfigFile(Config);
-            bool failed = false;
-            if (!File.Exists(config.CacheName))
+            var tags = File.ReadLines(config.TagFile).Where(i => !i.StartsWith("#"));
+            var logger = LogManager.GetCurrentClassLogger();
+            
+            var validateTagFile = tags.ToList();
+            if (!validateTagFile.Any())
             {
-                logger.Error("Cache file doesn't exist!");
-                File.WriteAllText(config.CacheName, "[]");
-                logger.Error("Cache file created.");
-
-                failed = true;
-            }
-            else
-            {
-                logger.Info("Cache file exists.");
-            }
-
-            logger.Info("Checking tag file...");
-            if (!File.Exists(config.TagFile))
-            {
-                logger.Error("Tag file doesn't exist!");
-                
-                var writer = new StreamWriter(File.Create(config.TagFile));
-                writer.Write("# Any line that starts with a pound sign is a comment and will be ignored by the program.\r\n" +
-                             "# Much like e621dl, this uses that same syntax, so feel free to list as many artist/pools/groups as you like.\r\n");
-                writer.Close();
-                
-                logger.Error("Tag file created.");
-                
-                failed = true;
-            }
-            else
-            {
-                logger.Info("Cache tag exists.");
-            }
-
-            if (failed)
-            {
-                logger.Error("Validation failed.");
-                logger.Error("Please restart and try again.");
-                Environment.Exit(-1);
+                logger.Error("No tags in file!");
+                logger.Error("Please fill tag file.");
             }
             
-            logger.Info("Validation complete.");
+            // Don't want to waste request on checking if tags are actually correct.
+            logger.Info("Tag file validated.");
+
+            return validateTagFile;
         }
-        
+
         public static void CreateLogger(IEnumerable<string> args)
         {
             int verbosity = DetermineLogLevel(args);
             var logConfig = GetLoggingConfig(verbosity);
             LogManager.Configuration = logConfig;
         }
-        
-        public static int DetermineLogLevel(IEnumerable<string> args)
+
+        private static int DetermineLogLevel(IEnumerable<string> args)
         {
             int verbosity = 0;
             var p = new OptionSet()
@@ -91,7 +61,7 @@ namespace PiE520Downloader
             return verbosity;
         }
 
-        public static LoggingConfiguration GetLoggingConfig(int verbosity)
+        private static LoggingConfiguration GetLoggingConfig(int verbosity)
         {
             var config = new LoggingConfiguration();
             var logfile = new FileTarget("PiE520dl LogFile") {FileName = "log.txt"};
@@ -101,7 +71,7 @@ namespace PiE520Downloader
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
             return config;
         }
-        
+
         public static Config GetConfigFile(string path)
         {
             if (File.Exists(path)) return JsonConvert.DeserializeObject<Config>(File.ReadAllText(Config));
@@ -114,9 +84,8 @@ namespace PiE520Downloader
                 CacheName = ".cache",
                 CacheSize = 65536,
                 CreateDirectories = false,
-                DownloadDirectory = "downloades/",
-                LastRun = DateTime.Today.ToShortDateString(),
-                ParallelDownloads = 8,
+                DownloadDirectory = "downloads/",
+                LastRun = $"{DateTime.Today:yyyy/MM/dd}",
                 PartUsedAsName = "md5",
                 TagFile = "tags.txt"
             };
@@ -130,29 +99,10 @@ namespace PiE520Downloader
             logger.Error("Config file needs validation...");
             logger.Error("Starting validation check.");
 
-            ValidateFiles();
+            Validator.ValidateFiles();
 
             return config;
 
-        }
-
-        public static IEnumerable<string> ValidateTagFile()
-        {
-            var config = GetConfigFile(Config);
-            var tags = File.ReadLines(config.TagFile).Where(i => !i.StartsWith("#"));
-            var logger = LogManager.GetCurrentClassLogger();
-            
-            var validateTagFile = tags.ToList();
-            if (!validateTagFile.Any())
-            {
-                logger.Error("No tags in file!");
-                logger.Error("Please fill tag file.");
-            }
-            
-            // Don't want to waste request on checking if tags are actually correct.
-            logger.Info("Tag file validated.");
-
-            return validateTagFile;
         }
     }
 }

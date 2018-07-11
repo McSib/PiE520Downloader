@@ -25,10 +25,11 @@ namespace PiE520Downloader.E621Api
             {
                 using (var webClient = new WebClient())
                 {
-                    string uri = $"http://e621.net/post/index.json?tags={formatedTags}+{date}&page={currentPage}&limit={MaxLimit}";
+                    string uri =
+                        $"http://e621.net/post/index.json?tags={formatedTags}+{date}&page={currentPage}&limit={MaxLimit}";
                     logger.Debug($"Url: {uri}");
                     logger.Debug($"Grabbing page: {currentPage}");
-                
+
                     webClient.Headers.Add("User-Agent", "PiE520Downloader");
                     var newPosts = JsonConvert.DeserializeObject<List<Post>>(webClient.DownloadString(uri));
                     if (newPosts.Count > 0)
@@ -39,11 +40,12 @@ namespace PiE520Downloader.E621Api
                     }
                     else
                     {
-                        logger.Debug($"All posts with tags \"{tags}\" grabbed from {DateTime.Parse(config.LastRun):yyyy/MM/dd} to {DateTime.Now:yyyy/MM/dd}");
+                        logger.Debug(
+                            $"All posts with tags \"{tags}\" grabbed from {DateTime.Parse(config.LastRun):yyyy/MM/dd} to {DateTime.Now:yyyy/MM/dd}");
                         elementsExist = false;
                     }
                 }
-                
+
                 // This is to prevent a DOS from the server.
 //                Thread.Sleep(500);
             } while (elementsExist);

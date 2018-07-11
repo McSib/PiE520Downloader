@@ -45,7 +45,7 @@ namespace PiE520Downloader
             _arrayProgress++;
             Report((double) _arrayProgress / _arrayLength);
         }
-        
+
         public void Report(double value)
         {
             // Make sure value is in [0..1] range
