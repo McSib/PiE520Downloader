@@ -71,7 +71,7 @@ namespace PiE520Downloader
             var cache = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(config.CacheName));
             foreach (string tag in tags)
             {
-                var newPosts = E621.GetPosts(tag).ToList();
+                var newPosts = E621PostManager.GetPosts(tag).ToList();
 
                 var cachedPosts = (from post in newPosts from md5Checks in cache where post.md5 == md5Checks select post).ToList();
                 foreach (var cachedPost in cachedPosts)

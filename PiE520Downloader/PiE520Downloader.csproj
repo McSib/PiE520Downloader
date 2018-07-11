@@ -62,7 +62,7 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="Downloader.cs" />
-    <Compile Include="E621Api\E621.cs" />
+    <Compile Include="E621Api\E621PostManager.cs" />
     <Compile Include="E621Api\Post.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgressBar.cs" />

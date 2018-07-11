@@ -6,7 +6,7 @@ using NLog;
 
 namespace PiE520Downloader.E621Api
 {
-    public static class E621
+    public static class E621PostManager
     {
         private const int MaxLimit = 100;
 
