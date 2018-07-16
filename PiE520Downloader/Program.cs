@@ -62,6 +62,8 @@ namespace PiE520Downloader
                 Util.SaveConfig(config);
                 logger.Debug("Config file updated.");
             }
+            
+            Util.PauseConsole();
         }
     }
 }

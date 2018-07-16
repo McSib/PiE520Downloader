@@ -14,6 +14,12 @@ namespace PiE520Downloader
     {
         public const string Config = "config.txt";
 
+        public static void PauseConsole()
+        {
+            Console.Write("Press any key to continue...");
+            Console.ReadKey(true);
+        }
+        
         public static IEnumerable<string> GetTags()
         {
             var config = GetConfigFile(Config);

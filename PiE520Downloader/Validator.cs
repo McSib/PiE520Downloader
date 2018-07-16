@@ -48,11 +48,17 @@ namespace PiE520Downloader
             var config = Util.GetConfigFile(Util.Config);
             ValidateConfigFile(config);
             bool failed = ValidateTagFile(config);
+            
+            if (!Directory.Exists(config.DownloadDirectory))
+            {
+                Directory.CreateDirectory(config.DownloadDirectory);
+            }
 
             if (failed)
             {
                 logger.Error("Validation failed.");
                 logger.Error("Please restart and try again.");
+                Util.PauseConsole();
                 Environment.Exit(-1); // Don't bother running the rest of the application without proper setup.
             }
             

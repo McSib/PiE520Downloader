@@ -35,11 +35,6 @@ namespace PiE520Downloader
             var tags = Util.GetTags();
             var progressBar = new ProgressBar();
             progressBar.SetLength(posts.Count);
-
-            if (!Directory.Exists(config.DownloadDirectory))
-            {
-                Directory.CreateDirectory(config.DownloadDirectory);
-            }
             
             Parallel.For(0,
                 posts.Count,
