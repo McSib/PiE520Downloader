@@ -78,11 +78,25 @@ namespace PiE520Downloader
 
             var logger = LogManager.GetCurrentClassLogger();
             logger.Error("Config file doesn't exist!");
+            
+            CreateConfig();
+            Validator.ValidateFiles();
 
-            var config = new Config
+            return null;
+        }
+
+        public static void SaveConfig(Config config)
+        {
+            if (config == null) throw new ArgumentNullException(nameof(config));
+            string json = JsonConvert.SerializeObject(config);
+            File.WriteAllText(Config, json);
+        }
+
+        private static void CreateConfig()
+        {
+            var logger = LogManager.GetCurrentClassLogger();
+            var newConfig = new Config
             {
-                CacheName = ".cache",
-                CacheSize = 65536,
                 CreateDirectories = false,
                 DownloadDirectory = "downloads/",
                 LastRun = $"{DateTime.Today:yyyy/MM/dd}",
@@ -90,19 +104,14 @@ namespace PiE520Downloader
                 TagFile = "tags.txt"
             };
 
-            string json = JsonConvert.SerializeObject(config);
+            string json = JsonConvert.SerializeObject(newConfig);
             var writer = new StreamWriter(File.Create(Config));
             writer.Write(json);
             writer.Close();
-            
+
             logger.Error("Config file created.");
             logger.Error("Config file needs validation...");
             logger.Error("Starting validation check.");
-
-            Validator.ValidateFiles();
-
-            return config;
-
         }
     }
 }

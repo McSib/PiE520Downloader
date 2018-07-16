@@ -1,27 +1,26 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using NLog;
 
 namespace PiE520Downloader
 {
     public static class Validator
     {
-        private static void ValidateCache(Config config)
+        private static void ValidateConfigFile(Config config)
         {
             var logger = LogManager.GetCurrentClassLogger();
-            if (!File.Exists(config.CacheName))
+            if (config.PartUsedAsName != "md5" && config.PartUsedAsName != "id")
             {
-                logger.Error("Cache file doesn't exist!");
-                File.WriteAllText(config.CacheName, "[]");
-                logger.Error("Cache file created.");
-            }
-            else
-            {
-                logger.Info("Cache file exists.");
+                const string errorMsg = "PartUsedAsName in Config needs to be either \"md5\" or \"id\"!";
+                logger.Error("Validation failed! Read log file to see what error has occured!");
+                logger.Fatal(errorMsg);
+                Thread.Sleep(1000);
+                throw new InvalidDataException(errorMsg);
             }
         }
 
-        private static void ValidateTagFile(Config config, ref bool failed)
+        private static bool ValidateTagFile(Config config)
         {
             var logger = LogManager.GetCurrentClassLogger();
             logger.Info("Checking tag file...");
@@ -36,23 +35,19 @@ namespace PiE520Downloader
 
                 logger.Error("Tag file created.");
 
-                failed = true;
+                return true;
             }
-            else
-            {
-                logger.Info("Tag file exists.");
-            }
+
+            logger.Info("Tag file exists.");
+            return false;
         }
 
         public static void ValidateFiles()
         {
             var logger = LogManager.GetCurrentClassLogger();
-            logger.Info("Checking cache file...");
-
             var config = Util.GetConfigFile(Util.Config);
-            bool failed = false;
-            ValidateCache(config);
-            ValidateTagFile(config, ref failed);
+            ValidateConfigFile(config);
+            bool failed = ValidateTagFile(config);
 
             if (failed)
             {
