@@ -16,6 +16,7 @@ namespace PiE520Downloader
 
         public static void PauseConsole()
         {
+            Console.WriteLine();
             Console.Write("Press any key to continue...");
             Console.ReadKey(true);
         }
@@ -26,17 +27,14 @@ namespace PiE520Downloader
             var tags = File.ReadLines(config.TagFile).Where(i => !i.StartsWith("#"));
             var logger = LogManager.GetCurrentClassLogger();
             
-            var validateTagFile = tags.ToList();
-            if (!validateTagFile.Any())
+            var tagList = tags.ToList();
+            if (!tagList.Any())
             {
                 logger.Error("No tags in file!");
                 logger.Error("Please fill tag file.");
             }
-            
-            // Don't want to waste request on checking if tags are actually correct.
-            logger.Info("Tag file validated.");
 
-            return validateTagFile;
+            return tagList;
         }
 
         public static void CreateLogger(IEnumerable<string> args)
@@ -80,15 +78,16 @@ namespace PiE520Downloader
 
         public static Config GetConfigFile(string path)
         {
-            if (File.Exists(path)) return JsonConvert.DeserializeObject<Config>(File.ReadAllText(Config));
+            while (true)
+            {
+                if (File.Exists(path)) return JsonConvert.DeserializeObject<Config>(File.ReadAllText(Config));
 
-            var logger = LogManager.GetCurrentClassLogger();
-            logger.Error("Config file doesn't exist!");
-            
-            CreateConfig();
-            Validator.ValidateFiles();
+                var logger = LogManager.GetCurrentClassLogger();
+                logger.Error("Config file doesn't exist!");
 
-            return null;
+                CreateConfig();
+                Validator.ValidateFiles();
+            }
         }
 
         public static void SaveConfig(Config config)

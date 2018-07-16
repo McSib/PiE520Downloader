@@ -62,7 +62,8 @@ namespace PiE520Downloader
                     SingleDownload(post, subDirectory == string.Empty ? subDirectory : $"{subDirectory}/", filename,
                         progressBar).Wait();
                 });
-
+            
+            progressBar.Dispose();
             logger.Debug("Successfully downloaded images.");
         }
     }
